@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Book a Room — Hotel Azure</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="container header-inner">
+                <div class="brand">
+                    <a href="index.html" class="brand-link">
+                        <img src="assets/hotel-img1.jpg" alt="Hotel Azure logo" class="brand-logo" />
+                        <span class="brand-name">Hotel Azure</span>
+                    </a>
+                </div>
+                <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav">☰</button>
+                <nav id="main-nav" class="main-nav" aria-label="Main navigation">
+                    <a href="rooms.html">Rooms</a>
+                    <a href="dining.html">Dining</a>
+                    <a href="#Contact">Contact</a>
+                    <a href="book.html" class="btn btn-cta">Book Now</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container">
+            <section class="booking">
+                <h2>Book a Room</h2>
+                <p class="muted">Fill out the form below to request a reservation. This is a demo form — submissions are handled client-side.</p>
+
+                <form id="booking-form" class="booking-form" novalidate>
+                    <div class="form-row">
+                        <label for="fullName">Full name</label>
+                        <input id="fullName" name="fullName" type="text" required placeholder="Jane Doe" />
+                    </div>
+
+                    <div class="form-row">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" required placeholder="you@example.com" />
+                    </div>
+
+                    <div class="form-row">
+                        <label for="phone">Phone</label>
+                        <input id="phone" name="phone" type="tel" placeholder="+1 555 123 4567" />
+                    </div>
+
+                    <div class="form-row grid-2">
+                        <div>
+                            <label for="checkin">Check-in</label>
+                            <input id="checkin" name="checkin" type="date" required />
+                        </div>
+                        <div>
+                            <label for="checkout">Check-out</label>
+                            <input id="checkout" name="checkout" type="date" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="roomType">Room type</label>
+                        <select id="roomType" name="roomType">
+                            <option>Standard</option>
+                            <option>Deluxe</option>
+                            <option>Suite</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row grid-2">
+                        <div>
+                            <label for="adults">Adults</label>
+                            <input id="adults" name="adults" type="number" min="1" value="1" />
+                        </div>
+                        <div>
+                            <label for="children">Children</label>
+                            <input id="children" name="children" type="number" min="0" value="0" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="requests">Special requests</label>
+                        <textarea id="requests" name="requests" rows="3" placeholder="Any special requests (optional)"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <button type="submit" class="btn btn-cta">Request Reservation</button>
+                    </div>
+                </form>
+
+                <div id="booking-result" class="booking-result" aria-live="polite" hidden></div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container">
+                <p>&copy; 2025 Hotel Azure. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <script>
+            // Mobile nav toggle (shared behavior)
+            (function(){
+                const btn = document.querySelector('.nav-toggle');
+                const nav = document.getElementById('main-nav');
+                if(btn && nav){
+                    btn.addEventListener('click', function(){
+                        const open = nav.classList.toggle('open');
+                        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    });
+                }
+            })();
+
+            // Booking form handling (client-side demo)
+            (function(){
+                const form = document.getElementById('booking-form');
+                const result = document.getElementById('booking-result');
+                if(!form || !result) return;
+
+                form.addEventListener('submit', function(e){
+                    e.preventDefault();
+                    // Basic validation: required fields
+                    const name = form.fullName.value.trim();
+                    const email = form.email.value.trim();
+                    const checkin = form.checkin.value;
+                    const checkout = form.checkout.value;
+
+                    if(!name || !email || !checkin || !checkout){
+                        result.hidden = false;
+                        result.textContent = 'Please complete the required fields: name, email, check-in and check-out.';
+                        result.style.color = 'crimson';
+                        return;
+                    }
+
+                    // Minimal date sanity check
+                    if(new Date(checkout) <= new Date(checkin)){
+                        result.hidden = false;
+                        result.textContent = 'Check-out must be after check-in.';
+                        result.style.color = 'crimson';
+                        return;
+                    }
+
+                    // Build a simple summary
+                    const summary = [];
+                    summary.push('Thank you, ' + name + '.');
+                    summary.push('We received your reservation request for a ' + form.roomType.value + ' from ' + checkin + ' to ' + checkout + '.');
+                    summary.push('A confirmation has been sent to ' + email + ' (demo).');
+
+                    result.hidden = false;
+                    result.style.color = '';
+                    result.innerHTML = '<strong>Reservation requested</strong><p>' + summary.join('<br>') + '</p>';
+
+                    // Optionally reset form (commented out for demo)
+                    // form.reset();
+                });
+            })();
+        </script>
+    </body>
+</html>
